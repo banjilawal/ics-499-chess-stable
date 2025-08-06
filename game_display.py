@@ -7,7 +7,7 @@ from colorama.ansi import clear_line
 
 from constants import GameColor, PlacementStatus
 from geometry import GridCoordinate
-from grid_entity import GridEntity, Mover, HorizontalMover, VerticalMover, DiagonalMover
+from grid_entity import GridEntity, Mover, HorizontalMover, VerticalMover, Bishop, Knight, Castle
 
 if TYPE_CHECKING:
     from board import Board
@@ -101,9 +101,9 @@ class GameDisplay:
             print("[Warning] Entity has no top_left_coordinate. Cannot draw an mover without a top_left_coordinate to the screen.")
             return
 
-        diagonal_mover_color = GameColor.IVORY.value
-        horizontal_mover_color = GameColor.OLIVE.value
-        vertical_mover_color = GameColor.DEEP_ORANGE.value
+        bishop_color = GameColor.IVORY.value
+        castle_color = GameColor.OLIVE.value
+        knight_color = GameColor.DEEP_ORANGE.value
         # print(f"Drawing mover {mover.mover_id_counter} at top_left_coordinate {mover.top_left_coordinate}")
         # Calculate position and dimensions
         rect = pygame.Rect(
@@ -114,17 +114,25 @@ class GameDisplay:
         )
         # Draw the mover (fixed the width parameter)
 
-        if isinstance(entity, HorizontalMover):
-            pygame.draw.rect(self.screen, horizontal_mover_color, rect)
-        if isinstance(entity, VerticalMover):
-            pygame.draw.rect(self.screen, vertical_mover_color, rect)
-        if isinstance(entity, DiagonalMover):
-            # pygame.draw.rect(self.screen, diagonal_mover_color, rect)
+        if isinstance(entity, Castle):
+            pygame.draw.rect(self.screen, castle_color, rect)
+        if isinstance(entity, Knight):
+            center_x, center_y = rect.center
+            radius = min(rect.width, rect.height) // 2 - 2  # slightly smaller than cell
+
+            # Triangle points (pointing up)
+            triangle_points = [
+                (center_x, center_y - radius),  # top point
+                (center_x - radius * 0.866, center_y + radius // 2),  # bottom left
+                (center_x + radius * 0.866, center_y + radius // 2)  # bottom right
+            ]
+            pygame.draw.polygon(self.screen, knight_color, triangle_points)
+        if isinstance(entity, Bishop):
             pygame.draw.circle(
                 self.screen,
-                diagonal_mover_color,
-                rect.center,  # center of the circle
-                min(rect.width, rect.height) // 2  # radius
+                bishop_color,
+                rect.center,
+                min(rect.width, rect.height) // 2 - 2  # slightly smaller than cell
             )
 
         # Draw mover ID
@@ -187,9 +195,14 @@ class GameDisplay:
         new_column = max(0, min(proposed_column, self.board.dimension.length - mover.dimension.length))
         proposed_row = max(0, min(proposed_row, self.board.dimension.height - mover.dimension.height))
 
+        new_column = max(0, min(proposed_column, self.board.dimension.length - mover.dimension.length))
+        # new_row = max(0, min(proposed_row, self.board.dimension.height - mover.dimension.height))
+        new_row = max(0, min(proposed_row, self.board.dimension.height - mover.dimension.height))
         # Enforce HorizontalMover constraint
-        if isinstance(mover, HorizontalMover):
-            proposed_row = drag_state.original_coordinate.row
+        if isinstance(mover, Castle):
+            proposed_row = new_row
+            proposed_colum = new_column
+            # proposed_column = drag_state.original_coordinate.column
 
         if isinstance(mover, VerticalMover):
             proposed_column = drag_state.original_coordinate.column
@@ -204,6 +217,7 @@ class GameDisplay:
         except ValueError as e:
             print(f"Invalid coordinate: {e}")
 
+    # Fix 1: Correct the typo in is_position_valid_for_drag method
     def is_position_valid_for_drag(self, mover: Mover, test_coordinate: GridCoordinate) -> bool:
         """Combined check for visual dragging"""
         # 1. Check board's official position (for static entities)
@@ -220,10 +234,10 @@ class GameDisplay:
                 other_state.mover.dimension
             )
 
-            if self.get_occupied_cells(test_coordinate.row, test_coordinate.columnl, mover.dimension) & other_cells:
+            # FIX: Changed columnl to column
+            if self.get_occupied_cells(test_coordinate.row, test_coordinate.column, mover.dimension) & other_cells:
                 return False
         return True
-
     # def update_drag(self, mover_id_counter: int, mouse_position: tuple[int, int]) -> None:
     #     if not self.is_dragging or mover_id_counter not in self.active_drags:
     #         return
@@ -301,6 +315,14 @@ class GameDisplay:
 
         moved_entity = self.board.move_entity(mover=drag_state.mover, upper_left_destination= drag_state.current_coordinate)
         return PlacementStatus.PLACED if moved_entity else PlacementStatus.BLOCKED
+
+    def get_occupied_cells(self, row: int, column: int, dimension) -> set:
+        """Return set of grid coordinates occupied by an entity at the given position"""
+        cells = set()
+        for r in range(row, row + dimension.height):
+            for c in range(column, column + dimension.length):
+                cells.add((r, c))
+        return cells
 
     def move_handler(self, entity: GridEntity, destination_coordinate: GridCoordinate) -> bool:
         if entity is None:

@@ -6,7 +6,7 @@ import pygame
 from geometry import Dimension, GridCoordinate
 from board import Board
 
-from grid_entity import DiagonalMover, VerticalMover
+from grid_entity import Bishop, VerticalMover, Castle, Knight
 
 from game_display import GameDisplay
 from id_factory import id_factory
@@ -16,42 +16,62 @@ sys.path.append(str(Path(__file__).parent.absolute()))
 def main():
     board = Board(dimension=Dimension(length=8, height=8))
 
-    board.add_new_entity(GridCoordinate(7,0), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,1), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,2), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,3), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,4), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,5), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(7,7), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    board.add_new_entity(GridCoordinate(7,0), Castle(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(7,7), Castle(mover_id=id_factory.mover_id()))
 
-    board.add_new_entity(GridCoordinate(6,0), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,1), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,2), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,3), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,4), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,5), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,6), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(6,7), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    board.add_new_entity(GridCoordinate(7,1), Knight(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(7,6), Knight(mover_id=id_factory.mover_id()))
 
-    board.add_new_entity(GridCoordinate(0,0), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,1), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,2), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,3), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,4), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,5), VerticalMover(mover_id=id_factory.mover_id(), length=1))
-    board.add_new_entity(GridCoordinate(0,7), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    board.add_new_entity(GridCoordinate(0,1), Knight(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(0,6), Knight(mover_id=id_factory.mover_id()))
 
-    board.add_new_entity(GridCoordinate(1,0), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,1), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,2), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,3), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,4), DiagonalMover(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,5), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,6), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
-    board.add_new_entity(GridCoordinate(1,7), DiagonalMover(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+
+    board.add_new_entity(GridCoordinate(1,0), Castle(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(1,7), Castle(mover_id=id_factory.mover_id()))
+
+    board.add_new_entity(GridCoordinate(7, 2), Bishop(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(7, 5), Bishop(mover_id=id_factory.mover_id()))
+
+    board.add_new_entity(GridCoordinate(0, 2), Bishop(mover_id=id_factory.mover_id()))
+    board.add_new_entity(GridCoordinate(0, 5), Bishop(mover_id=id_factory.mover_id()))
+
+    #
+    # board.add_new_entity(GridCoordinate(7,0), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,1), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,2), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,3), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,4), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,5), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(7,7), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    #
+    # board.add_new_entity(GridCoordinate(6,0), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,1), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,2), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,3), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,4), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,5), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,6), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(6,7), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    #
+    # board.add_new_entity(GridCoordinate(0,0), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,1), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,2), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,3), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,4), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,5), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    # board.add_new_entity(GridCoordinate(0,7), VerticalMover(mover_id=id_factory.mover_id(), length=1))
+    #
+    # board.add_new_entity(GridCoordinate(1,0), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,1), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,2), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,3), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,4), Bishop(mover_id=id_factory.mover_id(), dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,5), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,6), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
+    # board.add_new_entity(GridCoordinate(1,7), Bishop(mover_id=id_factory.mover_id(),  dimension=Dimension(length=1, height=1)))
 
     visualizer = GameDisplay(board)
-    # visualizer.board.add_new_entity(GridCoordinate(5, 0), DiagonalMover(mover_id=id_factory.mover_id(), dimension=4))
+    # visualizer.board.add_new_entity(GridCoordinate(5, 0), Bishop(mover_id=id_factory.mover_id(), dimension=4))
 
 
     clock = pygame.time.Clock()
